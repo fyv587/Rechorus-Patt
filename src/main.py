@@ -58,11 +58,13 @@ def main():
 	corpus_path = os.path.join(args.path, args.dataset, model_name.reader+args.data_appendix+ '.pkl')
 	if not args.regenerate and os.path.exists(corpus_path):
 		logging.info('Load corpus from {}'.format(corpus_path))
-		corpus = pickle.load(open(corpus_path, 'rb'))
+		with open(corpus_path, 'rb') as f:
+			corpus = pickle.load(f, encoding='latin1')
 	else:
 		corpus = reader_name(args)
 		logging.info('Save corpus to {}'.format(corpus_path))
-		pickle.dump(corpus, open(corpus_path, 'wb'))
+		with open(corpus_path, 'wb') as f:
+			pickle.dump(corpus, f)
 
 	# Define model
 	model = model_name(args, corpus).to(args.device)
